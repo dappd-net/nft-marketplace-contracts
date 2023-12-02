@@ -15,7 +15,7 @@ import "@openzeppelin/contracts/interfaces/IERC2981.sol";
 
 // ====== Internal imports ======
 
-import "@thirdweb-dev/contracts/extension/interface/IPlatformFee.sol";
+import "../IPlatformFee.sol";
 import "@thirdweb-dev/contracts/extension/upgradeable/ERC2771ContextConsumer.sol";
 import "@thirdweb-dev/contracts/extension/upgradeable/ReentrancyGuard.sol";
 import "@thirdweb-dev/contracts/extension/upgradeable/PermissionsEnumerable.sol";
@@ -285,7 +285,9 @@ contract OffersLogic is IOffers, ReentrancyGuard, ERC2771ContextConsumer {
 
         // Payout platform fee
         {
-            (address platformFeeRecipient, uint16 platformFeeBps) = IPlatformFee(address(this)).getPlatformFeeInfo();
+            (address platformFeeRecipient, uint16 platformFeeBps) = IPlatformFee(address(this)).getPlatformFeeInfo(
+                _currencyToUse
+            );
             uint256 platformFeeCut = (_totalPayoutAmount * platformFeeBps) / MAX_BPS;
 
             // Transfer platform fee
