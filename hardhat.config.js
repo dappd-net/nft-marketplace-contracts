@@ -40,10 +40,10 @@ module.exports = {
       gasPrice: 1000000000,
     },
     bscTestnet: {
-      url: 'https://binance-testnet.rpc.thirdweb.com',
+      url: 'https://data-seed-prebsc-1-s1.bnbchain.org:8545',
       chainId: 97,
       accounts: [`${privateKey}`],
-      gasPrice: 'auto',
+      gasPrice: 20000000000,
     },
   },
   paths: {
