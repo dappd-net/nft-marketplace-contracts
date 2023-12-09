@@ -27,9 +27,7 @@ to compile your contracts. This will also detect the [Contracts Extensions Docs]
 When you're ready to deploy your contracts, just run one of the following command to deploy you're contracts:
 
 ```bash
-npm run deploy
-# or
-yarn deploy
+npx hardhat run scripts/deploy.js --network bscTestnet
 ```
 
 ## Releasing Contracts
