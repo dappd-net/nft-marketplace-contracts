@@ -19,11 +19,18 @@ let marketplace;
 let owner;
 let addrs;
 
+let gasCost;
+
 const DISCOUNT_CURRENCY = {
   [5]: "0xac8CEe84dBec5b10A5FA15EdC1C1b0fb1368168E",
+	[56]: "0x988F7c894e4001EEB7B570CDE80dffE21CF7B6B9",
   [97]: "0xf9D72bbc2399Ff99A0165abBFf15a331349Ee9e2",
   [80001]: "0x34227aeC641fBAdD4d4F32CD387b45a583622589",
 };
+
+const DISCOUNT_BPS = {
+	[56]: 50
+}
 
 /* WETH addresses */
 const WETH_ADDRESS = {
@@ -87,6 +94,8 @@ async function main () {
     })
     console.log('chain id is ', hre.network.config.chainId)
     console.log('weth is', WETH_ADDRESS[hre.network.config.chainId])
+		gasCost = await owner.provider.estimateGas(DirectListings.deploy(...directListingsArgs));
+		console.log('gas cost for direct listings is', gasCost.toString())
     directListings = await DirectListings.deploy(...directListingsArgs);
     await directListings.waitForDeployment();
     console.log("direct listings deployed to:", await directListings.getAddress());
@@ -95,6 +104,8 @@ async function main () {
     // // deploy Offers
     Offers = await ethers.getContractFactory("contracts/offers/OffersLogic.sol:OffersLogic");
     const offersArgs = [];
+		gasCost = await owner.provider.estimateGas(Offers.deploy(...offersArgs));
+		console.log('gas cost for offers is', gasCost.toString())
     offers = await Offers.deploy(...offersArgs);
     await offers.waitForDeployment();
     console.log("offers deployed to:", await offers.getAddress());
@@ -103,6 +114,8 @@ async function main () {
     // // deploy English Auctions
     EnglishAuctions = await ethers.getContractFactory("contracts/english-auctions/EnglishAuctionsLogic.sol:EnglishAuctionsLogic");
     const englishAuctionsArgs = [WETH_ADDRESS[hre.network.config.chainId]];
+		gasCost = await owner.provider.estimateGas(EnglishAuctions.deploy(...englishAuctionsArgs));
+		console.log('gas cost for english auctions is', gasCost.toString())
     englishAuctions = await EnglishAuctions.deploy(...englishAuctionsArgs);
     await englishAuctions.waitForDeployment();
     console.log("english auctions deployed to:", await englishAuctions.getAddress());
@@ -191,8 +204,8 @@ async function main () {
       [],
       owner.address,
       100,
-      DISCOUNT_CURRENCY[hre.network.config.chainId],
-      0
+      DISCOUNT_CURRENCY[hre.network.config.chainId] || ethers.constants.AddressZero,
+			DISCOUNT_BPS[hre.network.config.chainId] || 0,
     );
     await initTx.wait();
     console.log("marketplace initialized");
