@@ -19,8 +19,13 @@ module.exports = {
     },
   },
   networks: {
+		eth: {
+			url: `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_MAINNET_API_KEY}}`,
+			chainId: 1,
+			accounts: [`${privateKey}`],
+		},
     goerli: {
-      url: `https://eth-goerli.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
+      url: `https://eth-goerli.alchemyapi.io/v2/${process.env.ALCHEMY_GOERLI_API_KEY}`,
       accounts: [`${privateKey}`],
       chainId: 5,
     },
@@ -45,6 +50,12 @@ module.exports = {
       accounts: [`${privateKey}`],
       gasPrice: 20000000000,
     },
+		bsc: {
+			url: 'https://bscrpc.com',
+			chainId: 56,
+			accounts: [`${privateKey}`],
+			gasPrice: 20000000000,
+		}
   },
   paths: {
     artifacts: "./artifacts-zk",
